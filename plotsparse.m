@@ -1,3 +1,5 @@
+%% Visualize sparse matrix
+% see also <spy https://www.mathworks.com/help/releases/R2017b/matlab/ref/spy.html>.
 function plotsparse( s )
 
 [row, col] = find(s);
