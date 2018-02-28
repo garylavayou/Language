@@ -1,3 +1,6 @@
+%% Remove fields from structure
+% If the specified fields do not exist in the structure, then the fields are ignored.
+% See also <rmfields>.
 function [ sout ] = rmstructfields( sin , rm_fields)
 
 names = fieldnames(sin);
