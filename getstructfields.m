@@ -1,12 +1,12 @@
 function new_struct = getstructfields( struct_obj, field_names, action, default_value)
 %getstructfields Retrieve fields from struct object.
 % |action|:
-%    'default': fields that does not exist in |struct_obj| or the field is empty, will be
-%           set as a specified default value (deault is 0);
+%    'default': fields that does not exist in |struct_obj| or the field is
+%						empty, will be set as a specified default value (default is 0);
 %    'empty': fields that does not exist in |struct_obj| will be set as empty;
-%    'ignore': fields that does not exist in |struct_obj| or the field is empty will be
-%           ignored;
-%    'error': if a requested field is empty or not exist, produce an error.
+%    'ignore': no warning message will be generated, if a field does
+%						not exist in |struct_obj| or a field is empty;
+%    'error': if a requested field is empty or not exist, an error is prompted.
 % multiple actions can be used in combination.
 % NOTE: invalid action will be ignored; 'error' has higher priority than 'ignore'.
 %% Debug Control
@@ -34,11 +34,13 @@ end
 if contains(action, 'empty')
     default_value = [];
 end
-if ischar(field_names)      % to support a single char array (string).
+if nargin <= 1 || isempty(fields_names)
+	field_names = fieldnames(struct_obj);
+elseif ischar(field_names)      % to support a single char array (string).
     field_names = {field_names};
 end
 
-caller_name = calledby;
+caller_name = replace(calledby, '.', '\');
 new_struct = struct;
 for i = 1:length(field_names)
     if isfield(struct_obj, field_names{i})

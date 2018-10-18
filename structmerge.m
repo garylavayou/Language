@@ -4,8 +4,8 @@
 %       'override': replace the former value of the same field;
 %       'exclude': reject the later value the the same field;
 %       'warning': prompt information for duplicated fields;
-% NOTE: If two struct instances of the input have the same field and 'exclude' options is
-% not specified, the later will override the value of the former.
+% NOTE: If two struct instances have the same field and 'exclude' options
+%				is not specified, the later will override the value of the former. 
 function output_struct = structmerge( varargin )
 %% 
 % see <getstructfields> to set DEBUG information.

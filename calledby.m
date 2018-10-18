@@ -1,4 +1,4 @@
-function out = calledby(depth)
+function out = calledby(depth, bConcise)
 % out = calledby(func_name)
 % OVERVIEW
 %     Queries the source of a function call, with variable depth, returning
@@ -7,16 +7,21 @@ function out = calledby(depth)
 % FORMS
 %     out = calledby
 %     out = calledby(depth)
+%			out = calledby(depth, bConcise)
 % 
 % DESCRIPTION
 %     out = calledby
 %       Returns the name of the calling function
 %     out = calledby(depth)
 %       Returns the name of the calling function at depth depth
-% 
+%			out = calledby(depth, bConcise)
+%				Returns the concise name of the calling function at depth depth, if
+%				bConcise=true.
+%
 % INPUTS
-%     depth - Depth of calling function to search. 0=current function,
-%     1=calling function (default), etc..
+%     depth - Depth of calling function to search. 
+%				0 = current function,
+%				1 = calling function (default), etc..
 % 
 % OUTPUTS
 %     out - Name of calling function or queried function. Returns 'workspace' if
@@ -27,7 +32,7 @@ function out = calledby(depth)
 %     http://www.mathworks.com/matlabcentral/fileexchange/51280-is-calledby-func-name-
 
     if nargin < 1; depth = [];end
-    if isempty(depth); depth = 1; end;
+    if isempty(depth); depth = 1; end
 
     ST = dbstack;
     
@@ -45,4 +50,9 @@ function out = calledby(depth)
 
     out = ST(depth+2).name;
 
+		%% MODIFIED
+		if nargin >= 2 && bConcise
+			out = split(out, '.');
+			out = out{end};
+		end
 end
