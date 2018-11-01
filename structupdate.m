@@ -1,15 +1,16 @@
-%% Merge multiple struct
-%    function sout = structmerge(st, ss)
-function st = structupdate(st, ss, mode)
+%% Update struct fields
+%    function sout = structupdate(st, ss)
+function st = structupdate(st, ss, fields, mode)
 %% 
 % see <getstructfields> to set DEBUG information.
 global DEBUG;
 
-if nargin <= 2
+if nargin <= 3
 	mode = 'warning';
 end
-
-fields = fieldnames(st);
+if nargin <= 2 || isempty(fields)
+  fields = fieldnames(st);
+end
 
 for i = 1:length(fields)
 	if ~isfield(ss, fields{i})
@@ -36,6 +37,13 @@ for i = 1:length(fields)
 			case 'ignore'
 			otherwise
 				error('error: unrecognized mode ''%s''', mode);
+		end
+	elseif isempty(ss.(fields{i}))
+		message = sprintf('[%s]Field ''%s'' is empty.', calledby, fields{i});
+		if ~isempty(DEBUG) && DEBUG
+			error(message); %#ok<SPERR>
+		else
+			cprintf('SystemCommands', 'Warning:%s\n', message);
 		end
 	else
 		st.(fields{i}) = ss.(fields{i});

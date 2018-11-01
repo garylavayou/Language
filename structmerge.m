@@ -2,7 +2,7 @@
 %    function sout = structmerge( s1, s2, ..., mode)
 % *mode*: 'override', 'exclude', 'warning';
 %       'override': replace the former value of the same field;
-%       'exclude': reject the later value the the same field;
+%       'exclude': reject the later value of the same field;
 %       'warning': prompt information for duplicated fields;
 % NOTE: If two struct instances have the same field and 'exclude' options
 %				is not specified, the later will override the value of the former. 

@@ -1,4 +1,4 @@
-function out = calledby(depth, bConcise)
+function [out, line] = calledby(depth, bConcise)
 % out = calledby(func_name)
 % OVERVIEW
 %     Queries the source of a function call, with variable depth, returning
@@ -54,5 +54,8 @@ function out = calledby(depth, bConcise)
 		if nargin >= 2 && bConcise
 			out = split(out, '.');
 			out = out{end};
+		end
+		if nargout >= 2
+			line = ST(depth+2).line;
 		end
 end
