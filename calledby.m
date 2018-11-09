@@ -54,6 +54,11 @@ function [out, line] = calledby(depth, bConcise)
 		if nargin >= 2 && bConcise
 			out = split(out, '.');
 			out = out{end};
+		else
+			tempout = split(out, '.');
+			if length(tempout) == 2 && isequal(tempout{1},tempout{2})
+				out = tempout{1};
+			end
 		end
 		if nargout >= 2
 			line = ST(depth+2).line;

@@ -24,7 +24,11 @@ function new_struct = getstructfields( struct_obj, field_names, action, default_
 %   ...
 %   DEBUG = old_debug;
 global DEBUG;
-
+if ~isempty(DEBUG) && DEBUG
+    form = 'full';
+else
+    form = 'concise';
+end
 if nargin < 3
     action = '';
 end
@@ -40,7 +44,7 @@ elseif ischar(field_names)      % to support a single char array (string).
     field_names = {field_names};
 end
 
-caller_name = replace(calledby, '.', '\');
+caller_name = calledby;
 new_struct = struct;
 for i = 1:length(field_names)
     if isfield(struct_obj, field_names{i})
@@ -51,9 +55,9 @@ for i = 1:length(field_names)
     end
     if contains(action, 'error')
         if isfield(struct_obj, field_names{i})
-            error('[%s] error: field ''%s'' is empty.', caller_name, field_names{i});
+            error('error: field ''%s'' is empty.', field_names{i});
         else
-            error('[%s] error: field ''%s'' does not exist.', caller_name, field_names{i});
+            error('error: field ''%s'' does not exist.', field_names{i});
         end
     end
     if nargin >= 3 && contains(action, {'empty', 'default'})
@@ -73,26 +77,17 @@ for i = 1:length(field_names)
     end
     if ~contains(action, 'ignore')
         if isfield(struct_obj, field_names{i})
-            message = sprintf('field ''%s'' is empty and removed.', caller_name, field_names{i});
+            message = sprintf('field ''%s'' is empty and removed.', field_names{i});
         elseif isfield(new_struct, field_names{i})
-            value = new_struct.(field_names{i});
-            if ischar(value) ||  (isscalar(value) && (isnumeric(value) || islogical(value)))
-                val_str = evalc('disp(new_struct.(field_names{i}))');
-                message = sprintf('field ''%s'' does not exist, set as ''%s''.', ...
-                    field_names{i}, strip(val_str));
-            else
-                val_str = evalc('disp(new_struct.(field_names{i}))');
-                val_str(end) = [];
-                message = sprintf('field ''%s'' does not exist, set as \n%s.', ...
-                    field_names{i}, val_str);
-            end
+            message = sprintf('field ''%s'' does not exist, set as %s.', ...
+                field_names{i}, tocstring(new_struct.(field_names{i}), form));
         else
             message = sprintf('field ''%s'' does not exist, ignored.', field_names{i});
         end
         if ~isempty(DEBUG) && DEBUG
             warning(['[', caller_name, '] ', message]);
         else
-            cprintf('SystemCommands', '[%s] Warning: %s\n', caller_name, message);
+            cprintf('SystemCommands', 'Warning:[%s] %s\n', caller_name, message);
         end
     end
 end
