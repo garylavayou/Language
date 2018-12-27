@@ -1,4 +1,6 @@
 %% Update struct fields
+% If a field does not exist in the target object, it is created with the supplied value.
+%
 %    function sout = structupdate(st, ss)
 %    function sout = structupdate(st, ss, mode)
 %					Update fields of |st| with values in |ss|. The |mode| controls the output
@@ -6,7 +8,7 @@
 %    function sout = structupdate(st, ss, fields)
 %    function sout = structupdate(st, ss, fields, mode)
 %					|fields| specifies which fields in |st| will be updated.
-function st = structupdate(st, ss, fields, varargin)
+function st = structupdate(st, ss, varargin)
 %% 
 % see <getstructfields> to set DEBUG information.
 global DEBUG;
@@ -45,7 +47,7 @@ for i = 1:length(fields)
 				end
 			case 'error'
 				error('error: %s', message);
-			case 'ignore'
+			case {'ignore', 'silent'}
 			otherwise
 				error('error: unrecognized mode ''%s''', mode);
 		end

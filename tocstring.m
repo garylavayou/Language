@@ -23,7 +23,7 @@ elseif isnumeric(obj)
 	if isscalar(obj)
 		str = ['<', num2str(obj), '>'];
 	elseif isrow(obj)
-		str = ['<', strip(sprintf('\t%g',a)), '>'];
+		str = ['<', strip(sprintf('\t%g',obj)), '>'];
 	end
 end
 if exist('str', 'var')
@@ -54,9 +54,8 @@ else
 		elseif iscell(obj)
 			str = strip(out{3});
 		elseif ismatrix(obj)
-			dims = join(string(num2str((size(obj))')), 'x');
-			mc = metaclass(obj);
-			type = mc.Name;
+			dims = join(string(num2str((size(obj))')).strip(), 'x');
+			type = class(obj);
 			str = sprintf('%s <a href="matlab:helpPopup %s" style="font-weight:bold">%s</a> array', ...
 				dims, type, type);
 		else

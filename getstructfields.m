@@ -45,7 +45,11 @@ elseif ischar(field_names)      % to support a single char array (string).
 end
 
 caller_name = calledby;
-new_struct = struct;
+if isstruct(struct_obj)
+	new_struct = struct;
+else
+	new_struct = Dictionary;
+end
 for i = 1:length(field_names)
     if isfield(struct_obj, field_names{i})
         if ~isempty(struct_obj.(field_names{i}))
@@ -54,10 +58,15 @@ for i = 1:length(field_names)
         end
     end
     if contains(action, 'error')
+			if nargin >= 4
+				err_msg = default_value;
+			else 
+				err_msg = '';
+			end
         if isfield(struct_obj, field_names{i})
-            error('error: field ''%s'' is empty.', field_names{i});
+            error('error: field ''%s'' is empty. %s', field_names{i}, err_msg);
         else
-            error('error: field ''%s'' does not exist.', field_names{i});
+            error('error: field ''%s'' does not exist. %s', field_names{i}, err_msg);
         end
     end
     if nargin >= 3 && contains(action, {'empty', 'default'})
@@ -75,7 +84,7 @@ for i = 1:length(field_names)
             end
         end
     end
-    if ~contains(action, 'ignore')
+    if ~contains(action, {'ignore', 'silent'})
         if isfield(struct_obj, field_names{i})
             message = sprintf('field ''%s'' is empty and removed.', field_names{i});
         elseif isfield(new_struct, field_names{i})
@@ -85,7 +94,7 @@ for i = 1:length(field_names)
             message = sprintf('field ''%s'' does not exist, ignored.', field_names{i});
         end
         if ~isempty(DEBUG) && DEBUG
-            warning(['[', caller_name, '] ', message]);
+            warning(message);
         else
             cprintf('SystemCommands', 'Warning:[%s] %s\n', caller_name, message);
         end

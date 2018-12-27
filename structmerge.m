@@ -6,12 +6,13 @@
 %       'warning': prompt information for duplicated fields;
 % NOTE: If two struct instances have the same field and 'exclude' options
 %				is not specified, the later will override the value of the former. 
+% Return value: sout is the first input argument if it is a <Dictionary>.
 function output_struct = structmerge( varargin )
 %% 
 % see <getstructfields> to set DEBUG information.
 global DEBUG;
 
-output_struct =struct;
+output_struct = varargin{1};
 if ischar(varargin{end})
     mode = varargin{end};       % mode is 'override'|'exclude'
     varargin = varargin(1:end-1);
@@ -21,11 +22,11 @@ if ischar(varargin{end})
 else
     mode = 'override';
 end
-for i = 1:length(varargin)
+for i = 2:length(varargin)
     if isempty(varargin{i})
         continue;
-    elseif ~isstruct(varargin{i})
-        error('error: %s: value is not a struct.', calledby);
+    elseif ~isstruct(varargin{i}) && ~isa(varargin{i}, 'Dictionary')
+        error('error: %s: value is not a struct or Dictionary.', calledby);
     else
         exist_fields = fieldnames(varargin{i});
         for j = 1:length(exist_fields)

@@ -8,6 +8,7 @@ function assertpermission(targetclass, member, getset)
 info = meta.class.fromName(targetclass);
 member_info = info.PropertyList;
 % determine if |member| is a property's name, and inquire the access permission
+% see also <isprop>, which require an argument of the 'targetclass' instance.
 [tf, idx] = ismember(member, {member_info.Name});
 if tf
     switch getset
