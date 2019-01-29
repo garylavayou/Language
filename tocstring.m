@@ -20,7 +20,7 @@ elseif islogical(obj)
 		str = '<false>';
 	end
 elseif isnumeric(obj)
-	if isscalar(obj)
+	if isempty(obj) || isscalar(obj)
 		str = ['<', num2str(obj), '>'];
 	elseif isrow(obj)
 		str = ['<', strip(sprintf('\t%g',obj)), '>'];

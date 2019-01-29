@@ -1,5 +1,6 @@
 %% Update struct fields
-% If a field does not exist in the target object, it is created with the supplied value.
+% Explictly update each fields of the target struct. If a field does not exist in the
+% target object, the value of the source struct is ignored. 
 %
 %    function sout = structupdate(st, ss)
 %    function sout = structupdate(st, ss, mode)
@@ -8,6 +9,11 @@
 %    function sout = structupdate(st, ss, fields)
 %    function sout = structupdate(st, ss, fields, mode)
 %					|fields| specifies which fields in |st| will be updated.
+%
+% When 'warning' is enabled, if a field is not provided by the source or is empty, a
+% warning message will be issued. See also <setdefault> that quielty processes missing
+% fields.
+
 function st = structupdate(st, ss, varargin)
 %% 
 % see <getstructfields> to set DEBUG information.
@@ -37,7 +43,7 @@ for i = 1:length(fields)
 		switch mode
 			case 'warning'
 				message = [message(1:end-1), sprintf(', the origin value is ')];
-				if ~isempty(DEBUG) && DEBUG
+				if DEBUG
 					% Decare the global DEBUG, or set a local DEBUG variable to enable warning.
 					message = [message, tocstring(st.(fields{i})), '.' ]; %#ok<AGROW>
 					warning(message);
@@ -53,7 +59,7 @@ for i = 1:length(fields)
 		end
 	elseif isempty(ss.(fields{i}))
 		message = sprintf('[%s] Field ''%s'' is empty.', calledby, fields{i});
-		if ~isempty(DEBUG) && DEBUG
+		if DEBUG
 			error(message); %#ok<SPERR>
 		else
 			cprintf('SystemCommands', 'Warning:%s\n', message);

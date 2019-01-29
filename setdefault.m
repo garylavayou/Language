@@ -1,7 +1,14 @@
 %% Set default value for structure
+% If a field from the source struct does not exist in the target struct, the field in the
+% target will be set with the source's value.
 %		s = setdefault(s, s_def)
 %		s = setdefault(s, s_def, fields)
 %   s = setdefault(s, s_def, fields, mode)
+%			|s| is an object of <struct> or <Dictionary>. If s is a <Dictioanry>, the changes
+%			will be maintained in the input argument |s|.
+% NOTE: setdefault does not produce warning if the |s_def| has empty fields or lacks
+% fields that exist in |s|. See also <structupdate> that explictly update each fields of
+% |s|.
 function s = setdefault(s, s_def, varargin)
 global DEBUG;
 if nargin <= 2
@@ -31,7 +38,7 @@ for i = 1:length(fields)
 			else
 				message = sprintf('Field ''%s'' is empty,', fields{i});
 			end
-			if ~isempty(DEBUG) && DEBUG
+			if DEBUG
 				warning('%s set to %s', message, tocstring(s_def.(fields{i}), 'full') );
 			else
 				cprintf('SystemCommands', 'Warning:[%s] %s\n', calledby, ...
